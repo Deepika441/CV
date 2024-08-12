@@ -1,0 +1,18 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+cap=cv2.VideoCapture('test2.mp4')
+sub=cv2.BackgroundSubtractorMOG2()
+while True:
+  ret,frame=cap.read()
+  mask=sub.apply(frame)
+  contour=cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+  for i in contour:
+    if cv2.contourArea(i)>550:
+      x,y,w,h=cv2.boundingRect(i)
+      cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+  cv2_imshow(frame)
+  cv2_imshow(mask)
+# Release resources
+cap.release()
+cv2.destroyAllWindows()
